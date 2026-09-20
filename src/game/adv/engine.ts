@@ -200,11 +200,13 @@ export class AdventureScene {
     dir += clamp(input.axisX, -1, 1); dir = clamp(dir, -1, 1);
     const wantDown = input.down('s', 'arrowdown');
     // agachar/correr só valem no chão
-    this.crouch = this.onGround && input.down('control') && Math.abs(dir) < 0.9;
-    this.running = this.onGround && !this.crouch && input.down('shift') && Math.abs(dir) > 0.1;
+    this.crouch = this.onGround && (input.down('control') || input.touchCrouch) && Math.abs(dir) < 0.9;
+    // correr: SHIFT, botão de correr, ou empurrar o direcional até o fim (auto-run no toque)
+    this.running = this.onGround && !this.crouch && Math.abs(dir) > 0.1 &&
+      (input.down('shift') || input.touchRun || Math.abs(clamp(input.axisX, -1, 1)) > 0.82);
 
     // ---- pulo: buffer + coyote ----
-    if (input.pressed(' ') || input.pressed('w') || input.pressed('arrowup') || (input.pointer.justDown && input.pointer.y < GROUND_Y - 40)) {
+    if (input.pressed(' ') || input.pressed('w') || input.pressed('arrowup') || input.touchJumpJust || (input.pointer.justDown && input.pointer.y < GROUND_Y - 40)) {
       if (this.onGround && this.standPlat && wantDown) { this.dropT = 0.14; this.onGround = false; this.playerY += 4; } // descer da plataforma
       else this.jumpBufT = JUMP_BUF;
     }
@@ -214,7 +216,7 @@ export class AdventureScene {
     }
     if (this.jumpBufT > 0) this.jumpBufT -= dt;
     // ---- pulo de altura variável: soltar o botão corta o impulso (short hop) ----
-    const jumpHeld = input.down(' ') || input.down('w') || input.down('arrowup');
+    const jumpHeld = input.down(' ') || input.down('w') || input.down('arrowup') || input.touchJump;
     if (this.jumpCut && !jumpHeld && this.vy < -260) this.vy = -260;
     if (this.vy >= 0) this.jumpCut = false;
 
@@ -273,7 +275,7 @@ export class AdventureScene {
     const noise = this.stunT > 0 ? 0 : this.crouch ? 0.05 : this.running ? 1 : this.moving ? 0.4 : 0;
 
     // ---- ataque do jogador (F) ----
-    if ((input.pressed('f') || input.pressed('j')) && this.atkCd <= 0 && this.stunT <= 0) {
+    if ((input.pressed('f') || input.pressed('j') || input.touchAttackJust) && this.atkCd <= 0 && this.stunT <= 0) {
       this.atkT = 0.22; this.atkCd = 0.42; audio.sfxSelect();
       const hx = this.playerX + this.facing * 30;
       this.vfx.burst(hx - this.camX, this.playerY - 42, 'spark', 6);

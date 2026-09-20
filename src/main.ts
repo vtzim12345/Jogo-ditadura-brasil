@@ -13,12 +13,17 @@ const ctx = canvas.getContext('2d')!;
 canvas.width = VW; canvas.height = VH;
 
 function fitCanvas() {
-  const cw = window.innerWidth, ch = window.innerHeight;
+  const vv = window.visualViewport;
+  const cw = Math.round((vv && vv.width) || window.innerWidth);
+  const ch = Math.round((vv && vv.height) || window.innerHeight);
   const scale = Math.min(cw / VW, ch / VH);
   canvas.style.width = Math.round(VW * scale) + 'px';
   canvas.style.height = Math.round(VH * scale) + 'px';
 }
 window.addEventListener('resize', fitCanvas);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', fitCanvas);
+// mobile: após girar, o navegador reporta tamanho velho — refaz o encaixe com atraso
+window.addEventListener('orientationchange', () => { fitCanvas(); setTimeout(fitCanvas, 250); setTimeout(fitCanvas, 600); });
 fitCanvas();
 
 const input = new Input(canvas);
@@ -63,35 +68,69 @@ function startNew(char: string, diff: Difficulty) {
 // ---------- MOBILE CONTROLS ----------
 const touchLayer = document.getElementById('touch-layer')!;
 let isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+
+// fábrica de botões tipo gamepad (segurar = ação contínua)
+function mkBtn(o: { label: string; size: number; right?: string; bottom?: string; left?: string; font?: number; onDown?: () => void; onUp?: () => void }) {
+  const b = document.createElement('div');
+  b.className = 'tbtn';
+  b.style.width = o.size + 'px'; b.style.height = o.size + 'px';
+  if (o.right) b.style.right = o.right;
+  if (o.left) b.style.left = o.left;
+  if (o.bottom) b.style.bottom = o.bottom;
+  b.style.fontSize = (o.font || 15) + 'px';
+  b.textContent = o.label;
+  b.addEventListener('pointerdown', (e) => {
+    e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch {}
+    b.classList.add('pressed'); audio.init(); audio.resume(); o.onDown && o.onDown();
+  });
+  const up = (e: PointerEvent) => { e.preventDefault(); b.classList.remove('pressed'); o.onUp && o.onUp(); };
+  b.addEventListener('pointerup', up);
+  b.addEventListener('pointercancel', up);
+  touchLayer.appendChild(b);
+  return b;
+}
+
 function buildTouchControls() {
   if (!isTouch) return;
+  // ---- direcional analógico (esquerda) ----
   const stick = document.createElement('div');
-  stick.className = 'tbtn'; stick.style.left = '20px'; stick.style.bottom = '20px';
-  stick.style.width = '110px'; stick.style.height = '110px';
+  stick.className = 'tbtn'; stick.style.left = '18px'; stick.style.bottom = '22px';
+  stick.style.width = '128px'; stick.style.height = '128px';
   const knob = document.createElement('div');
-  knob.style.cssText = 'position:absolute;width:46px;height:46px;border-radius:50%;background:rgba(217,164,65,.7);left:32px;top:32px';
+  knob.style.cssText = 'position:absolute;width:54px;height:54px;border-radius:50%;background:rgba(217,164,65,.75);left:37px;top:37px;transition:none';
   stick.appendChild(knob);
-  const knobLabel = document.createElement('div'); knobLabel.textContent = '◀ ▶';
-  knobLabel.style.cssText = 'position:absolute;bottom:-20px;width:100%;text-align:center;font-size:11px;color:#cfc7b2';
+  const knobLabel = document.createElement('div'); knobLabel.textContent = '◀  ▶';
+  knobLabel.style.cssText = 'position:absolute;bottom:-22px;width:100%;text-align:center;font-size:11px;color:#cfc7b2';
   stick.appendChild(knobLabel);
+  const R = 44; // curso do direcional
   let cx = 0, active = -1;
-  stick.addEventListener('pointerdown', (e) => { active = e.pointerId; cx = e.clientX; stick.setPointerCapture(e.pointerId); });
+  stick.addEventListener('pointerdown', (e) => { e.preventDefault(); active = e.pointerId; cx = e.clientX; try { stick.setPointerCapture(e.pointerId); } catch {} audio.init(); audio.resume(); });
   stick.addEventListener('pointermove', (e) => {
     if (e.pointerId !== active) return;
-    const dx = Math.max(-40, Math.min(40, e.clientX - cx));
-    input.axisX = dx / 40; knob.style.left = (32 + dx) + 'px';
+    const dx = Math.max(-R, Math.min(R, e.clientX - cx));
+    input.axisX = dx / R; knob.style.left = (37 + dx * 0.6) + 'px';
   });
-  const reset = () => { input.axisX = 0; knob.style.left = '32px'; active = -1; };
+  const reset = () => { input.axisX = 0; knob.style.left = '37px'; active = -1; };
   stick.addEventListener('pointerup', reset); stick.addEventListener('pointercancel', reset);
   touchLayer.appendChild(stick);
 
-  const act = document.createElement('div');
-  act.className = 'tbtn'; act.style.right = '24px'; act.style.bottom = '30px';
-  act.style.width = '78px'; act.style.height = '78px'; act.style.fontSize = '15px';
-  act.textContent = 'E';
-  act.addEventListener('pointerdown', (e) => { e.preventDefault(); input.touchInteract = true; input.touchInteractJust = true; audio.init(); audio.resume(); });
-  act.addEventListener('pointerup', () => { input.touchInteract = false; });
-  touchLayer.appendChild(act);
+  // ---- botões de ação (direita), dispostos como um gamepad ----
+  // Pular (principal, maior)
+  mkBtn({ label: 'PULAR', size: 88, right: '20px', bottom: '20px', font: 14,
+    onDown: () => { input.touchJump = true; input.touchJumpJust = true; },
+    onUp: () => { input.touchJump = false; } });
+  // Golpear
+  mkBtn({ label: 'GOLPE', size: 74, right: '118px', bottom: '34px', font: 13,
+    onDown: () => { input.touchAttack = true; input.touchAttackJust = true; },
+    onUp: () => { input.touchAttack = false; } });
+  // Interagir
+  mkBtn({ label: 'E', size: 70, right: '30px', bottom: '118px', font: 20,
+    onDown: () => { input.touchInteract = true; input.touchInteractJust = true; },
+    onUp: () => { input.touchInteract = false; } });
+  // Agachar (segurar)
+  mkBtn({ label: '▼', size: 62, right: '124px', bottom: '124px', font: 22,
+    onDown: () => { input.touchCrouch = true; },
+    onUp: () => { input.touchCrouch = false; } });
 
   updateTouchVisibility();
 }

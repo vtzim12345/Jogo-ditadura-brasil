@@ -6,6 +6,11 @@ export class Input {
   axisX = 0;
   touchInteract = false;
   touchInteractJust = false;
+  // ações de toque dedicadas (botões na tela)
+  touchJump = false; touchJumpJust = false;
+  touchAttack = false; touchAttackJust = false;
+  touchCrouch = false;
+  touchRun = false;
   pointer = { x: 0, y: 0, down: false, justDown: false, dy: 0, prevY: 0 };
   wheel = 0;
   private clickTargets: { x: number; y: number; w: number; h: number; id: string }[] = [];
@@ -61,6 +66,8 @@ export class Input {
     this.justPressed = {};
     this.pointer.justDown = false;
     this.touchInteractJust = false;
+    this.touchJumpJust = false;
+    this.touchAttackJust = false;
     this.wheel = 0;
   }
 }
