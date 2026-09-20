@@ -1,0 +1,22 @@
+:root{
+  --bg:#0d0f14; --panel:#141821; --ink:#e8e4d8; --gold:#d9a441; --line:#c9c4b4;
+  --danger:#c1443a; --ok:#5aa469;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;
+  font-family:'Segoe UI',system-ui,Arial,sans-serif;-webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;touch-action:none}
+#app{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center}
+#game{display:block;image-rendering:pixelated;image-rendering:crisp-edges;background:#0d0f14}
+#touch-layer{position:absolute;inset:0;pointer-events:none;z-index:5}
+.tbtn{position:absolute;pointer-events:auto;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:rgba(20,24,33,.55);border:2px solid rgba(217,164,65,.6);
+  color:#e8e4d8;font-weight:700;backdrop-filter:blur(2px);touch-action:none}
+#orient-warning{position:absolute;inset:0;z-index:50;background:#0d0f14;display:none;
+  align-items:center;justify-content:center;color:#e8e4d8;text-align:center}
+#orient-warning.show{display:flex}
+.ow-box{padding:24px}
+.ow-icon{font-size:64px;color:#d9a441;animation:spin 2s linear infinite}
+.ow-box p{font-size:20px;margin:14px 0 6px}
+.ow-box small{opacity:.6}
+@keyframes spin{to{transform:rotate(360deg)}}

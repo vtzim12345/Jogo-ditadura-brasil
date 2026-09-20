@@ -1,0 +1,15 @@
+export interface DocDef { id: string; num: string; title: string; text: string; source: string; }
+
+// All documents are educational reconstructions / summaries, not reproductions.
+export const DOCUMENTS: Record<string, DocDef> = {
+  d01: { id: 'd01', num: '#01', title: 'O Brasil às vésperas de 1964', text: 'O país vivia forte polarização: inflação alta, debate sobre as Reformas de Base e pressões da Guerra Fria. Setores conservadores temiam avanço de ideias de esquerda.', source: 'Síntese educativa baseada em CPDOC/FGV.' },
+  d02: { id: 'd02', num: '#02', title: 'O golpe de 1964', text: 'Entre 31 de março e 1º de abril de 1964, tropas depuseram João Goulart. O episódio é hoje classificado por historiadores como golpe civil-militar.', source: 'Síntese educativa baseada no Arquivo Nacional.' },
+  d03: { id: 'd03', num: '#03', title: 'Atos Institucionais', text: 'Normas de exceção editadas pelo regime, acima da Constituição. O AI-1 (1964) abriu caminho para cassações; o AI-5 (1968) foi o mais severo.', source: 'Síntese educativa baseada na Câmara dos Deputados.' },
+  d04: { id: 'd04', num: '#04', title: 'Censura e imprensa', text: 'Jornais e revistas passaram por censura prévia. Espaços vetados às vezes eram preenchidos com receitas ou poemas, sinal visto pelos leitores como "aqui havia uma notícia".', source: 'Síntese educativa baseada na Biblioteca Nacional.' },
+  d05: { id: 'd05', num: '#05', title: 'Cultura sob vigilância', text: 'Músicas, peças e filmes precisavam de autorização prévia. Muitos artistas foram censurados ou exilados; outros usaram metáforas para driblar os censores.', source: 'Síntese educativa baseada em acervos culturais e CPDOC/FGV.' },
+  d06: { id: 'd06', num: '#06', title: 'Repressão política', text: 'Comissões oficiais posteriores, como a Comissão Nacional da Verdade, documentaram prisões, tortura, mortes e desaparecimentos de opositores durante o regime.', source: 'Relatório da Comissão Nacional da Verdade (2014).' },
+  d07: { id: 'd07', num: '#07', title: 'Movimento estudantil de 1968', text: 'A morte do estudante Edson Luís e a Passeata dos Cem Mil marcaram 1968. O movimento estudantil foi duramente reprimido no fim daquele ano.', source: 'Síntese educativa baseada em CPDOC/FGV.' },
+  d08: { id: 'd08', num: '#08', title: 'A abertura política', text: 'A partir de Geisel (1974), o regime iniciou uma abertura "lenta, gradual e segura", que incluiu o fim do AI-5 e a Lei da Anistia de 1979.', source: 'Síntese educativa baseada no Senado Federal.' },
+  d09: { id: 'd09', num: '#09', title: 'Diretas Já', text: 'Em 1983–1984, comícios reuniram centenas de milhares de pessoas pedindo eleições diretas. A emenda foi rejeitada, mas a mobilização marcou a transição.', source: 'Síntese educativa baseada em acervos jornalísticos e CPDOC/FGV.' },
+  d10: { id: 'd10', num: '#10', title: 'Redemocratização', text: 'Em 1985 um presidente civil assumiu, encerrando o regime. Em 1988 foi promulgada a nova Constituição, chamada "Constituição Cidadã".', source: 'Síntese educativa baseada no Senado Federal.' }
+};
