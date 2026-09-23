@@ -21,19 +21,6 @@ Abra o endereço mostrado no terminal (http://127.0.0.1:5173).
 npm run build      # gera a pasta dist/
 npm run preview    # testa o build localmente
 ```
-
-## Publicar no Vercel
-
-1. Suba a pasta do projeto para um repositório (GitHub/GitLab) **ou** use a Vercel CLI.
-2. Na Vercel, importe o projeto. As configurações já vêm prontas em `vercel.json`:
-   - Build Command: `npm run build`
-   - Output Directory: `dist`
-3. Deploy. Alternativa por CLI:
-   ```bash
-   npm i -g vercel
-   vercel
-   ```
-
 ## Controles
 
 **PC**
