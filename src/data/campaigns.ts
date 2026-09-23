@@ -323,18 +323,18 @@ export const CAMPAIGNS: Record<string, Campaign> = {
   // Pergunta do arco: "Onde foi parar o colega desaparecido — e como proteger a lista de nomes sem entregar ninguém?"
   helena: {
     char: 'helena', name: 'Helena Rocha', role: 'Estudante universitária',
-    premise: '1968. A universidade fervilha e a repressão aperta. Um colega sumiu, um bilhete cifrado marca uma reunião clandestina, e uma lista com nomes de estudantes pode protegê-los — ou condená-los. Helena precisa descobrir o que houve, organizar a resposta e decidir até onde a memória vale o risco.',
+    premise: '1968. A universidade fervilha e a repressão aperta. Um colega sumiu, um bilhete com uma frequência de rádio leva a uma reunião clandestina, e uma lista com nomes de estudantes pode protegê-los — ou condená-los. Helena precisa descobrir o que houve, organizar a resposta e decidir até onde a memória vale o risco.',
     rooms: [
       // ---------- CAPÍTULO 1 — O BILHETE ----------
       {
         id: 'campus', biome: 'school', mood: 'tense', year: 1968, worldW: 1600,
         title: 'Capítulo 1', sub: 'O bilhete no caderno',
-        objective: 'Entenda o bilhete cifrado que apareceu no seu caderno e por que um colega sumiu.',
+        objective: 'Sintonize a rádio clandestina indicada no bilhete, descubra a reunião e por que um colega sumiu.',
         tip: 'Observe antes de agir. Alguns achados só aparecem quando você examina o ambiente; CTRL agacha e ajuda a passar despercebida.',
         mission: { id: 'm_helena_1', title: 'O bilhete', stages: [
-          { objective: 'Descubra o que diz o bilhete cifrado deixado no seu caderno.',
+          { objective: 'Sintonize a frequência do bilhete e ouça o aviso da reunião.',
             subs: [
-              { id: 'h_bilhete', label: 'Decifrar o bilhete', on: { t: 'solve', v: 'pz_h_cipher' } },
+              { id: 'h_bilhete', label: 'Sintonizar a rádio clandestina', on: { t: 'solve', v: 'pz_h_reuniao' } },
             ],
             reward: { resources: 4 },
             say: [{ who: 'hero', text: '"Reunião no porão às dez." Alguém confia em mim — ou está me testando.', emo: 'determined' }] },
@@ -351,7 +351,7 @@ export const CAMPAIGNS: Record<string, Campaign> = {
         ] },
         intro: [
           { who: 'narrator', text: 'Cartazes arrancados, murmúrio nos corredores. Depois da última passeata, todo mundo fala baixo.' },
-          { who: 'hero', text: 'Deixaram um bilhete no meu caderno. Só tem letras embaralhadas.', emo: 'surprised' },
+          { who: 'hero', text: 'Deixaram um bilhete no meu caderno. Só tem um número — uma frequência de rádio.', emo: 'surprised' },
         ],
         platforms: [
           { x: 1180, y: 320, w: 130, kind: 'ledge' },
@@ -360,11 +360,11 @@ export const CAMPAIGNS: Record<string, Campaign> = {
           { x0: 820, x1: 1300, speed: 46, kind: 'agent' },
         ],
         props: [
-          { id: 'h_bilhete', x: 300, kind: 'puzzle', label: 'Decifrar o bilhete', glyph: '⌗',
-            puzzle: { id: 'pz_h_cipher', kind: 'cipher', title: 'Bilhete cifrado', brief: 'Um colega deixou uma mensagem em código. Gire o deslocamento até o texto fazer sentido.',
-              hint: 'Cada letra foi trocada por outra algumas casas adiante no alfabeto. Teste os deslocamentos.',
-              cipherText: 'VIYRMES RS TSVES EW HID', cipherPlain: 'REUNIAO NO PORAO AS DEZ',
-              onSolve: { setFlag: 'h_msg_ok', clue: { id: 'c_reuniao', title: 'Reunião secreta', text: 'Reunião no porão às dez. Ponto de encontro do movimento estudantil.', cat: 'local' }, archive: 'estudantes',
+          { id: 'h_bilhete', x: 300, kind: 'puzzle', label: 'Sintonizar a rádio clandestina', glyph: '♫',
+            puzzle: { id: 'pz_h_reuniao', kind: 'radio', title: 'A rádio clandestina', brief: 'O bilhete traz só um número: uma frequência. O movimento avisa a hora e o lugar da reunião por uma rádio clandestina. Gire o dial até o sinal ficar limpo.',
+              hint: 'Gire o dial devagar. Perto de 62 kHz o chiado vira voz.',
+              radioTarget: 62, radioMsg: 'REUNIAO NO PORAO AS DEZ',
+              onSolve: { setFlag: 'h_msg_ok', clue: { id: 'c_reuniao', title: 'Reunião secreta', text: 'Reunião no porão às dez. Ponto de encontro do movimento estudantil, avisado pela rádio clandestina.', cat: 'local' }, archive: 'estudantes',
                 say: [{ who: 'hero', text: '"Reunião no porão às dez." Então é hoje.', emo: 'determined' }] } } },
           { id: 'h_mural', x: 560, kind: 'clue', label: 'Ver o cartaz rasgado', glyph: '╤', hidden: true,
             say: [{ who: 'narrator', text: 'Sob o cartaz oficial, um outro colado às pressas: a foto de um estudante sumido há semanas. Embaixo, a rubrica de sempre — "conduzido para averiguação".' }],
@@ -821,18 +821,18 @@ export const CAMPAIGNS: Record<string, Campaign> = {
   // Pergunta do arco: "Como levar a música proibida ao público sem que o show seja fechado e a trupe presa?"
   beatriz: {
     char: 'beatriz', name: 'Beatriz Nunes', role: 'Música e compositora',
-    premise: '1973. A censura prévia corta letras de música. Beatriz escondeu uma mensagem cifrada na arte da capa do disco. Para fazê-la soar num show, precisa juntar aliados na rua, combinar um sinal por rádio e decidir, no palco, entre a arte segura e a resistência — sabendo o preço de cada opção.',
+    premise: '1973. A censura prévia corta letras de música. Beatriz escondeu o sinal num verso que a censura tenta cortar. Para fazê-la soar num show, precisa juntar aliados na rua, combinar um sinal por rádio e decidir, no palco, entre a arte segura e a resistência — sabendo o preço de cada opção.',
     rooms: [
       // ---------- CAPÍTULO 1 — O CORTE ----------
       {
         id: 'teatro', biome: 'theater', mood: 'tense', year: 1973, worldW: 1500,
         title: 'Capítulo 1', sub: 'A letra que cortaram',
         objective: 'Descubra a mensagem oculta na capa do disco e o que o censor cortou da letra.',
-        tip: 'Cifra de deslocamento: gire até as letras da ilustração formarem uma frase.',
+        tip: 'Compare as duas colunas e toque na linha que a censura alterou ou cortou.',
         mission: { id: 'm_beatriz_1', title: 'O corte', stages: [
-          { objective: 'Decifre a mensagem escondida na arte da capa.',
+          { objective: 'Compare a letra original com a versão liberada pelo censor e ache o verso que foi cortado.',
             subs: [
-              { id: 'b_capa', label: 'Decifrar a capa do disco', on: { t: 'solve', v: 'pz_b_cipher2' } },
+              { id: 'b_capa', label: 'Comparar a letra com a versão do censor', on: { t: 'solve', v: 'pz_b_news' } },
             ],
             reward: { resources: 4 },
             say: [{ who: 'hero', text: '"Sussurro do tambor." Quem tiver ouvidos vai ouvir — se eu conseguir cantar.', emo: 'determined' }] },
@@ -847,23 +847,35 @@ export const CAMPAIGNS: Record<string, Campaign> = {
           { who: 'hero', text: 'Cortaram o refrão inteiro. Mas na capa do disco eu deixei uma pista.', emo: 'worried' },
         ],
         props: [
-          { id: 'b_capa', x: 320, kind: 'puzzle', label: 'Decifrar a capa do disco', glyph: '⌗',
-            puzzle: { id: 'pz_b_cipher2', kind: 'cipher', title: 'A capa do disco', brief: 'Na ilustração da capa há letras espalhadas. Ajuste o deslocamento para revelar a mensagem escondida.',
-              hint: 'As letras na ilustração formam uma frase. Deslocamento 7.',
-              cipherText: 'ZBZZBYYV KV AHTIVY', cipherPlain: 'SUSSURRO DO TAMBOR',
-              onSolve: { setFlag: 'b_capa_ok', clue: { id: 'c_sussurro', title: 'Sussurro do tambor', text: 'Mensagem oculta na capa: "Sussurro do tambor" — senha para o público e a trupe reconhecerem o momento da versão completa.', cat: 'codigo' }, archive: 'censura',
-                say: [{ who: 'hero', text: '"Sussurro do tambor." É o sinal. Falta combinar quem responde a ele.', emo: 'determined' }] } } },
+          { id: 'b_capa', x: 320, kind: 'puzzle', label: 'Comparar a letra com a versão do censor', glyph: '⌗',
+            puzzle: { id: 'pz_b_news', kind: 'news', title: 'A letra e a censura', brief: 'Compare a sua letra original com a versão que o censor liberou. Toque na linha que foi CORTADA ou TROCADA — é nela que estava o sinal.',
+              hint: 'Procure o verso onde o sentido mudou ou sumiu. Onde a censura apagou é onde mora a mensagem.',
+              newsA: [
+                'Vem que a praça é do povo, o céu é do condor',
+                'No sussurro do tambor mora a nossa voz',
+                'Ninguém solta a mão de ninguém no escuro',
+                'Amanhã há de ser outro dia, sem temor',
+              ],
+              newsB: [
+                'Vem que a praça é do povo, o céu é do condor',
+                'Na melodia serena repousa o amor',
+                'Ninguém solta a mão de ninguém no escuro',
+                'Amanhã há de ser outro dia, sem temor',
+              ],
+              newsAnswer: 1,
+              onSolve: { setFlag: 'b_capa_ok', clue: { id: 'c_sussurro', title: 'Sussurro do tambor', text: 'O verso cortado pela censura — "no sussurro do tambor mora a nossa voz" — é a senha: quando ele voltar no palco, a trupe assume a versão completa.', cat: 'codigo' }, archive: 'censura',
+                say: [{ who: 'hero', text: '"Sussurro do tambor." É o verso que cortaram — e é o sinal. Falta combinar quem responde a ele.', emo: 'determined' }] } } },
           { id: 'b_letra', x: 640, kind: 'clue', label: 'Ver a letra cortada', glyph: '╤', hidden: true,
             say: [{ who: 'narrator', text: 'Lado a lado: a sua letra e a versão do censor. Onde havia "quem cala consente", ficou uma linha em branco carimbada "VETADO".' }],
             clue: { id: 'c_letra_cortada', title: 'A linha vetada', text: 'O refrão "quem cala consente" foi vetado pela censura prévia. A mensagem inteira vive nessa linha.', cat: 'documento' }, reward: { resources: 6 } },
           { id: 'b_diretor', x: 980, kind: 'talk', label: 'Falar com o diretor', glyph: '☺', requires: 'b_capa_ok', setFlag: 'b_diretor_ok',
-            lockedSay: [{ who: 'hero', text: 'Preciso decifrar a capa antes de combinar qualquer coisa.' }],
+            lockedSay: [{ who: 'hero', text: 'Preciso comparar a letra com a versão do censor antes de combinar qualquer coisa.' }],
             say: [
               { who: 'actor', text: 'Beatriz, no papel canto a versão aprovada. Mas se você der o sinal do tambor, a trupe inteira vira a letra.', emo: 'worried' },
               { who: 'hero', text: 'Então preciso de gente na plateia que entenda o sinal — e de um jeito de avisar todo mundo ao mesmo tempo.', emo: 'determined' },
             ] },
           { id: 'b_exit1', x: 1420, kind: 'exit', label: 'Sair para a rua', glyph: '→', to: 1, gate: 'mission_m_beatriz_1_done',
-            lockedSay: [{ who: 'hero', text: 'Ainda preciso decifrar a capa e falar com o diretor.' }],
+            lockedSay: [{ who: 'hero', text: 'Ainda preciso comparar a letra e falar com o diretor.' }],
             say: [{ who: 'narrator', text: 'Você sai pela porta dos artistas. Os convites clandestinos precisam chegar a quem sabe ouvir — sem cair na mão errada.' }] },
         ],
       },
